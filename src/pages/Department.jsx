@@ -121,14 +121,14 @@ const Department = () => {
                 <ul>
                     <li>
                         <a>
-                            <IoSettings />
-                            Settings
+                            <FaHome />
+                            Home
                         </a>
                     </li>
                     <li>
                         <a>
-                            <FaUsers className="font-bold mr-1" />
-                            CRM
+                            <IoSettings />
+                            Settings
                         </a>
                     </li>
                     <li>
@@ -183,16 +183,16 @@ const Department = () => {
                                     <td colSpan="7" className="text-center py-4">No Department available.</td>
                                 </tr>
                             ) : (departments?.map((department, index) =>
-                                <tr key={department._id} className="bg-gray-100">
+                                <tr key={department.id} className="bg-gray-100">
                                     <td className="px-1 py-1 border text-center">{index + 1 + (currentPage - 1) * limit}</td>
                                     <td className="px-3 py-1 border text-xs">
                                         {department.department_name}
                                     </td>
                                     <td className="px-2 py-1 border text-xs text-center">
                                         <p
-                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${department.department_status === '1' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${department.department_status === 1 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
                                         >
-                                            {department.department_status === '1' ? 'Active' : 'Inactive'}
+                                            {department.department_status === 1 ? 'Active' : 'Inactive'}
                                         </p>
                                     </td>
                                     <td className="px-2 py-1 border text-center">

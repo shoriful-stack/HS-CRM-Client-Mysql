@@ -2,12 +2,12 @@ import { useForm } from "react-hook-form";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 
 const EditDepartmentModal = ({ editDepartmentModalOpen, setEditDepartmentModalOpen, department, refetch }) => {
     const { register, handleSubmit, reset, setValue } = useForm();
     const axiosSecure = useAxiosSecure();
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
 
 
     useEffect(() => {
@@ -21,25 +21,30 @@ const EditDepartmentModal = ({ editDepartmentModalOpen, setEditDepartmentModalOp
         setEditDepartmentModalOpen(false);
     };
     const onSubmit = async (data) => {
-        console.log(data);
-
         const updatedDepartment = {
             department_name: data.department_name,
             department_status: data.department_status
         };
-        const departmentRes = await axiosSecure.patch(`/departments/${department._id}`, updatedDepartment);
-        console.log(departmentRes.data);
 
-        if (departmentRes.data.modifiedCount > 0) {
-            reset();
-            refetch();
-            queryClient.invalidateQueries(['employees']);
-            toast.success(`${data.department_name} updated successfully`, {autoClose: 1500});
-            closeModal();
-        }
-        if (departmentRes.data.modifiedCount === 0) {
-            refetch();
-            closeModal();
+        try {
+            const departmentRes = await axiosSecure.patch(`/departments/${department.id}`, updatedDepartment);
+            console.log(departmentRes.data);
+
+            if (departmentRes?.data?.changedRows > 0) {
+                reset();
+                refetch();
+                // queryClient.invalidateQueries(['employees']);
+                toast.success(`${data.department_name} updated successfully`, { autoClose: 1500 });
+                closeModal();
+            }else {
+                reset();
+                // Handle the case where the update was not successful
+                toast.info('No changes made', { autoClose: 1500 });
+                closeModal();
+            }
+        } catch (error) {
+            console.error("Failed to update department:", error);
+            toast.error('Error updating department', { autoClose: 1500 });
         }
     };
 

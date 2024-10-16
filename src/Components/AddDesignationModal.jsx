@@ -16,7 +16,7 @@ const AddDesignationModal = ({ isDesignationModalOpen, setIsDesignationModalOpen
 
         const addDesignation = {
             designation: data.designation.trim(),
-            designation_status: data.designation_status || "1"
+            designation_status: data.designation_status || 1
         }
         try {
             const designationRes = await axiosSecure.post('/designations', addDesignation);
@@ -30,6 +30,7 @@ const AddDesignationModal = ({ isDesignationModalOpen, setIsDesignationModalOpen
             }
         } catch (error) {
             toast.error(`${data.designation} already exists.`);
+            reset();
         }
     }
 
@@ -38,7 +39,7 @@ const AddDesignationModal = ({ isDesignationModalOpen, setIsDesignationModalOpen
             {/* Modal Component */}
             {isDesignationModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6 relative">
                         <button
                             onClick={closeModal}
                             className="absolute top-3 right-3 hover:text-gray-700 text-3xl"
@@ -55,20 +56,20 @@ const AddDesignationModal = ({ isDesignationModalOpen, setIsDesignationModalOpen
                                     type="text"
                                     name="designation"
                                     {...register("designation", { required: true })}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                    className="mt-1 text-xs block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                 />
                             </div>
                             <div className="flex justify-end">
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="mr-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
+                                    className="mr-2 text-xs px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
+                                    className="px-4 text-xs py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
                                 >
                                     Submit
                                 </button>

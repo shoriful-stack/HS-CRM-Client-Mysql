@@ -16,7 +16,7 @@ const AddDepartmentModal = ({ isDepartmentModalOpen, setIsDepartmentModalOpen, r
 
         const addDepartment = {
             department_name: data.department_name.trim(),
-            department_status: data.department_status || "1"
+            department_status: data.department_status || 1
         }
         try {
             const departmentRes = await axiosSecure.post('/departments', addDepartment);
@@ -33,6 +33,7 @@ const AddDepartmentModal = ({ isDepartmentModalOpen, setIsDepartmentModalOpen, r
             }
         } catch (error) {
             toast.error(`${data.department_name} already exists.`);
+            reset();
         }
     }
 
