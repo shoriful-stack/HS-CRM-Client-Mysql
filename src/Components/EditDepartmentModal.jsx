@@ -44,7 +44,7 @@ const EditDepartmentModal = ({ editDepartmentModalOpen, setEditDepartmentModalOp
             }
         } catch (error) {
             console.error("Failed to update department:", error);
-            toast.error('Error updating department', { autoClose: 1500 });
+            toast.error('This Department already exists', { autoClose: 1500 });
         }
     };
 

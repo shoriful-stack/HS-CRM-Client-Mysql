@@ -45,7 +45,7 @@ const EditDesignationModal = ({ editDesignationModalOpen, setEditDesignationModa
             }
         } catch (error) {
             console.error("Failed to update designation:", error);
-            toast.error('Error updating designation', { autoClose: 1500 });
+            toast.error('This Designation already exists', { autoClose: 1500 });
         }
     };
 

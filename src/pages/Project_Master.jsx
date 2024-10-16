@@ -9,7 +9,6 @@ import AddProject_MasterModal from "../Components/AddProject_MasterModal";
 import EditProject_MasterModal from "../Components/EditProject_MasterModal";
 import ImportProjects_MasterModal from "../Components/ImportProjects_MasterModal";
 import debounce from "lodash.debounce";
-import { MdModeEdit } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 
 const Project_Master = () => {
@@ -146,19 +145,19 @@ const Project_Master = () => {
                 <ul>
                     <li>
                         <a>
+                            <FaHome />
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a>
                             <IoSettings />
                             Settings
                         </a>
                     </li>
                     <li>
                         <a>
-                            <FaUsers className="font-bold mr-1" />
-                            CRM
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            All Projects
+                            Project Master
                         </a>
                     </li>
                 </ul>
@@ -216,7 +215,7 @@ const Project_Master = () => {
                                     <td colSpan="7" className="text-center py-4">No Project available.</td>
                                 </tr>
                             ) : (projects_master?.map((project, index) =>
-                                <tr key={project._id} className="bg-gray-100">
+                                <tr key={project.id} className="bg-gray-100">
                                     <td className="px-1 py-1 border text-center">{index + 1 + (currentPage - 1) * limit}</td>
                                     <td className="px-3 py-1 border text-xs">
                                         {project.project_name}
@@ -226,9 +225,9 @@ const Project_Master = () => {
                                     </td>
                                     <td className="px-2 py-1 border text-xs text-center">
                                         <p
-                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${project.project_status === '1' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${project.project_status === 1 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
                                         >
-                                            {project.project_status === '1' ? 'Active' : 'Inactive'}
+                                            {project.project_status === 1 ? 'Active' : 'Inactive'}
                                         </p>
                                     </td>
                                     <td className="px-2 py-1 border text-center">
