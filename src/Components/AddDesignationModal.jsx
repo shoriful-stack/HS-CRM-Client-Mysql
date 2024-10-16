@@ -39,15 +39,15 @@ const AddDesignationModal = ({ isDesignationModalOpen, setIsDesignationModalOpen
             {/* Modal Component */}
             {isDesignationModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6 relative">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-xs p-4 relative">
                         <button
                             onClick={closeModal}
                             className="absolute top-3 right-3 hover:text-gray-700 text-3xl"
                         >
                             ×
                         </button>
-                        <h2 className="text-xl font-semibold mb-4">Add New Designation</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <h2 className="text-lg font-semibold mb-2">Add New Designation</h2>
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
                                     Designation*
