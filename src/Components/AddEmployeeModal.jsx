@@ -23,10 +23,10 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
             employee_name: data.employee_name,
             department_name: data.department_name,
             designation: data.designation,
-            employee_phone: data.employee_phone,
-            employee_email: data.employee_email,
+            employee_phone: data.employee_phone.trim(),
+            employee_email: data.employee_email.trim(),
             employee_uid: data.employee_uid.trim(),
-            employee_pass: data.employee_pass
+            employee_pass: data.employee_pass.trim()
         }
 
         try {
@@ -51,7 +51,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
             {/* Modal Component */}
             {isEmployeeModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-4 relative">
                         <button
                             onClick={closeModal}
                             className="absolute top-3 right-3 hover:text-gray-700 text-3xl"
@@ -59,7 +59,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                             ×
                         </button>
                         <h2 className="text-xl font-semibold mb-4">Add New Employee</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
                             {/* Employee Name */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
@@ -163,13 +163,13 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="mr-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
+                                    className="mr-2 text-sm px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
+                                    className="px-4 text-sm py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
                                 >
                                     Submit
                                 </button>

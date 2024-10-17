@@ -264,7 +264,7 @@ const Employees = () => {
                         <tbody>
                             {employees.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" className="text-center py-4">No Employees available.</td>
+                                    <td colSpan="8" className="text-center py-4">No Employee available.</td>
                                 </tr>
                             ) : (employees?.map((employee, index) =>
                                 <tr key={employee._id} className="bg-gray-100">
