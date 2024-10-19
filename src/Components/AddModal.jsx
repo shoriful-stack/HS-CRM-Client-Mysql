@@ -15,11 +15,11 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
         console.log(data);
 
         const addCustomer = {
-            name: data.name.trim(),
-            phone: data.phone,
-            email: data.email,
-            status: data.status || "1",
-            address: data.address
+            customer_name: data.customer_name,
+            customer_phone: data.customer_phone.trim(),
+            customer_email: data.customer_email.trim(),
+            customer_address: data.customer_address,
+            customer_status: data.customer_status || 1
         }
 
         try{
@@ -29,11 +29,12 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
             if (customerRes.data.insertedId) {
                 reset();
                 refetch();
-                toast.success(`${data.name} added successfully`, {autoClose: 1500});
+                toast.success(`${data.customer_name} added successfully`, {autoClose: 1500});
                 closeModal();
             }
         }catch (error){
-            toast.error(`${data.name} already exists.`);
+            console.log(error)
+            toast.error(`${data.customer_name} already exists.`, {autoClose: 1500});
         }
     }
 
@@ -43,7 +44,7 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
             {/* Modal Component */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-4 relative">
                         <button
                             onClick={closeModal}
                             className="absolute top-3 right-3 hover:text-gray-700 text-3xl"
@@ -51,16 +52,16 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
                             ×
                         </button>
                         <h2 className="text-xl font-semibold mb-4">Add New Customer</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
                                     Customer Name*
                                 </label>
                                 <input
                                     type="text"
-                                    name="name"
-                                    {...register("name", { required: true })}
-                                    className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                    name="customer_name"
+                                    {...register("customer_name", { required: true })}
+                                    className="mt-1 text-xs block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-2">
@@ -70,9 +71,9 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
                                     </label>
                                     <input
                                         type="phone"
-                                        name="phone"
-                                        {...register("phone")}
-                                        className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                        name="customer_phone"
+                                        {...register("customer_phone")}
+                                        className="mt-1 text-xs block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     />
                                 </div>
                                 <div>
@@ -81,9 +82,9 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
                                     </label>
                                     <input
                                         type="email"
-                                        name="email"
-                                        {...register("email")}
-                                        className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                        name="customer_email"
+                                        {...register("customer_email")}
+                                        className="mt-1 text-xs block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     />
                                 </div>
                             </div>
@@ -93,22 +94,22 @@ const AddModal = ({isModalOpen, setIsModalOpen, refetch}) => {
                                 </label>
                                 <textarea
                                     type="text"
-                                    name="address"
-                                    {...register("address")}
-                                    className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                    name="customer_address"
+                                    {...register("customer_address")}
+                                    className="mt-1 text-xs block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                 />
                             </div>
                             <div className="flex justify-end">
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="mr-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
+                                    className="mr-2 text-sm px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
+                                    className="px-4 text-sm py-2 bg-green-500 text-white rounded-md hover:bg-teal-600"
                                 >
                                     Submit
                                 </button>

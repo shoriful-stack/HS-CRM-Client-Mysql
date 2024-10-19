@@ -258,22 +258,22 @@ const Customers = () => {
                         <tbody>
                             {customers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" className="text-center py-4">No customers available.</td>
+                                    <td colSpan="7" className="text-center py-4">No customer available.</td>
                                 </tr>
                             ) : (customers?.map((customer, index) =>
-                                <tr key={customer._id} className="bg-gray-100">
+                                <tr key={customer.id} className="bg-gray-100">
                                     <td className="px-1 py-1 border text-center">{index + 1 + (currentPage - 1) * limit}</td>
                                     <td className="px-3 py-1 border text-xs">
-                                        {customer.name}
+                                        {customer.customer_name}
                                     </td>
-                                    <td className="px-3 py-1 border text-xs">{customer.phone}</td>
-                                    <td className="px-3 py-1 border text-xs">{customer.email}</td>
-                                    <td className="px-3 py-1 border text-xs">{customer.address}</td>
+                                    <td className="px-3 py-1 border text-xs">{customer.customer_phone}</td>
+                                    <td className="px-3 py-1 border text-xs">{customer.customer_email}</td>
+                                    <td className="px-3 py-1 border text-xs">{customer.customer_address || "N/A"}</td>
                                     <td className="px-2 py-1 border text-xs text-center">
                                         <p
-                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${customer.status === '1' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+                                            className={`px-1 py-1 text-xs font-semibold rounded-md ${customer.customer_status === 1 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
                                         >
-                                            {customer.status === '1' ? 'Active' : 'Inactive'}
+                                            {customer.customer_status === 1 ? 'Active' : 'Inactive'}
                                         </p>
                                     </td>
                                     <td className="px-2 py-1 border text-center">

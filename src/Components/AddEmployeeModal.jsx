@@ -84,7 +84,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                         className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Department</option>
-                                        {allDepartments.filter(department => department.department_status === "1").map((department) => (
+                                        {allDepartments.filter(department => department.department_status === 1).map((department) => (
                                             <option key={department._id} value={department.department_name}>
                                                 {department.department_name}
                                             </option>
@@ -101,7 +101,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                         className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Designation</option>
-                                        {allDesignations.filter(designation => designation.designation_status === "1").map((designation) => (
+                                        {allDesignations.filter(designation => designation.designation_status === 1).map((designation) => (
                                             <option key={designation._id} value={designation.designation}>
                                                 {designation.designation}
                                             </option>
