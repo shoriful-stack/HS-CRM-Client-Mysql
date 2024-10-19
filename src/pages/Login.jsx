@@ -4,29 +4,45 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { MdEmail } from "react-icons/md";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
 
-    const adminInfo = {
-        email: 'admin@gmail.com',
-        password: 'admin'
-    };
+    // const adminInfo = {
+    //     email: 'admin@gmail.com',
+    //     password: 'admin'
+    // };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (email === adminInfo.email && password === adminInfo.password) {
-            localStorage.setItem('userEmail', JSON.stringify({ email }));
-            localStorage.setItem('userPass', JSON.stringify({ password }));
-            toast.success('Login successful!');
-            navigate('/dashboard/home');
-        } else {
-            toast.error('Invalid email or password!');
+        
+        try {
+            const response = await axiosSecure.post('/login', { email, password });
+            
+            if (response.status === 200) {
+                const { name, role } = response.data;
+                
+                // Save user information in localStorage
+                localStorage.setItem('name', JSON.stringify({ name }));
+                localStorage.setItem('role', JSON.stringify({ role }));
+                
+                toast.success('Login successful!');
+    
+                // Redirect based on role
+                navigate(role === 'admin' ? '/dashboard/home' : '/dashboard/home');
+            } else {
+                toast.error('Invalid email or password!');
+            }
+        } catch (error) {
+            toast.error('Login failed: ' + error.response?.data?.message || error.message);
         }
-    };
+    };    
+    
 
     return (
         <div className="bg-slate-50 min-h-screen flex flex-col justify-center">
