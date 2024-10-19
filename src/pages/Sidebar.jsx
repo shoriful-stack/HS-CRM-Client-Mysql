@@ -1,12 +1,12 @@
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaFileContract, FaMoneyCheckAlt, FaUsers } from "react-icons/fa";
+import { FaMoneyCheckAlt, FaUsers } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { IoClose, IoMenu, IoSettings } from "react-icons/io5";
 import { RiProjectorFill } from "react-icons/ri";
 import { SiMastercomfig } from "react-icons/si";
 import { TbLogout2 } from "react-icons/tb";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 
@@ -15,26 +15,31 @@ const Sidebar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-//   const [isProfileOpen, setProfileOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false);
   const [isChangePasswordOpen, setChangePasswordOpen] = useState(false);
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const axiosSecure = useAxiosSecure();
 
   const name = JSON.parse(localStorage.getItem("name"))?.name || "User";
   const email = JSON.parse(localStorage.getItem("email"))?.email;
 
   // Fetch employee details
-//   useEffect(() => {
-//     if (isProfileOpen && email) {
-//       axiosSecure
-//         .get(`/employees/${email}`)
-//         .then((response) => setEmployeeDetails(response.data))
-//         .catch((error) => toast.error("Error fetching employee details"));
-//     }
-//   }, [isProfileOpen, email]);
+  // useEffect(() => {
+  //   if (isProfileOpen && email) {
+  //     axiosSecure.get(`/employees/${email}`)
+  //       .then((response) => console.log(response.data))
+  //       .catch((error) => toast.error("Error fetching employee details"));
+  //   }
+  // }, [isProfileOpen, email]);
 
   const handlePasswordChange = () => {
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     axiosSecure
       .put(`/employee/${email}/password`, { newPassword })
       .then(() => {
@@ -102,39 +107,72 @@ const Sidebar = () => {
                   <li>
                     <p className="font-medium pt-2 px-2">{name}</p>
                   </li>
-                  {/* <li> */}
-                    {/* <button className="font-medium">Profile</button> */}
-                    {/* Profile Modal */}
-                    {/* <Modal
+                  {/* <li>
+                    <button
+                      className="font-medium p-2"
+                      onClick={() => setProfileOpen(true)}
+                    >
+                      View Profile
+                    </button>
+                    <Modal
                       show={isProfileOpen}
                       onClose={() => setProfileOpen(false)}
                     >
-                      <Modal.Header>Profile</Modal.Header>
+                      <Modal.Header>Employee Details</Modal.Header>
                       <Modal.Body>
                         <p>Name: {employeeDetails.employee_name}</p>
-                        <p>Email: {employeeDetails.employee_email}</p>
-                      </Modal.Body>
+                        <p>Email: {employeeDetails.email}</p>
+                        {/* Add any other employee details you want to display */}
+                      {/* </Modal.Body>
+                      <Modal.Footer>
+                        <Button onClick={() => setProfileOpen(false)}>
+                          Close
+                        </Button>
+                      </Modal.Footer>
                     </Modal> */}
                   {/* </li> */}
                   <li>
-                    <button className="font-medium p-2" onClick={() => setChangePasswordOpen(true)}>Change Password</button>
+                    <button
+                      className="font-medium p-2"
+                      onClick={() => setChangePasswordOpen(true)}
+                    >
+                      Change Password
+                    </button>
                     {/* Change Password Modal */}
                     <Modal
                       show={isChangePasswordOpen}
                       onClose={() => setChangePasswordOpen(false)}
-                      className="max-w-sm flex justify-center items-center"
+                      className="max-w-sm mx-auto bg-opacity-0"
                     >
-                      <Modal.Header>Change Password</Modal.Header>
-                      <Modal.Body>
+                      <Modal.Header className="px-3 pt-2 pb-1 mb-2 font-lexend">Change Password</Modal.Header>
+                      <Modal.Body className="px-5 pb-3 pt-1 font-lexend">
+                        {/* Current Password */}
+                        <input
+                          type="password"
+                          value={employeeDetails.password} // Display current password (assuming this data is coming from your API)
+                          readOnly
+                          className="mb-2 py-1 px-2 w-full border rounded-lg"
+                          placeholder="Current password"
+                        />
+                        {/* New Password */}
                         <input
                           type="password"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
+                          className="mb-2 py-1 px-2 w-full border rounded-lg"
                           placeholder="Enter new password"
                         />
+                        {/* Confirm Password */}
+                        <input
+                          type="password"
+                          value={confirmPassword} // Add confirm password state
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="py-1 px-2 w-full border rounded-lg"
+                          placeholder="Confirm new password"
+                        />
                       </Modal.Body>
-                      <Modal.Footer>
-                        <Button onClick={handlePasswordChange}>
+                      <Modal.Footer className="px-3 pt-2 pb-1 mb-2 font-lexend">
+                        <Button onClick={handlePasswordChange} className="mx-auto px-0 rounded">
                           Change Password
                         </Button>
                       </Modal.Footer>
