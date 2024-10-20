@@ -30,16 +30,17 @@ const Sidebar = () => {
   const axiosSecure = useAxiosSecure();
 
   const email = JSON.parse(localStorage.getItem("email"))?.email;
+  const name = JSON.parse(localStorage.getItem("name"))?.name;
 
   // Fetch employee details
   useEffect(() => {
-    if (isProfileOpen && email) {
+    if (email) {
       axiosSecure
         .get(`/employee/${email}`)
         .then((response) => setEmployeeDetails(response.data))
         .catch((error) => toast.error("Error fetching employee details"));
     }
-  }, [isProfileOpen, email]);
+  }, [email]);
 
   const handlePasswordChange = () => {
     if (newPassword !== confirmPassword) {
@@ -50,7 +51,7 @@ const Sidebar = () => {
     axiosSecure
       .put(`/employee/${email}/password`, { newPassword })
       .then(() => {
-        toast.success("Password updated successfully");
+        toast.success("Password updated successfully", {autoClose: 1300});
         setChangePasswordOpen(false);
       })
       .catch((error) => toast.error("Error updating password"));
@@ -113,7 +114,7 @@ const Sidebar = () => {
                 >
                   <li className="border-b-black border-b">
                     <p className="font-medium pt-2 px-2">
-                      {employeeDetails.employee_name}
+                      {name}
                     </p>
                   </li>
                   <li className="border-b-black border-b">
@@ -154,10 +155,10 @@ const Sidebar = () => {
                           {employeeDetails.designation}
                         </p>
                       </Modal.Body>
-                      <Modal.Footer className="px-3 pt-2 pb-1 mb-2 font-lexend">
+                      <Modal.Footer className="px-3 pt-2 pb-0 mb-2 font-lexend">
                         <Button
                           onClick={() => setProfileOpen(false)}
-                          className="mx-auto px-0 rounded"
+                          className="mx-auto px-0 rounded py-0"
                         >
                           Close
                         </Button>
@@ -178,36 +179,30 @@ const Sidebar = () => {
                       className="max-w-sm mx-auto bg-opacity-0"
                     >
                       <Modal.Header className="px-3 pt-2 pb-1 mb-2 font-lexend">
-                      <span className="font-bold pl-16">
-                          Change Password
-                        </span>
+                        <span className="font-bold pl-16">Change Password</span>
                       </Modal.Header>
                       <Modal.Body className="px-5 pb-3 pt-1 font-lexend">
                         {/* Current Password */}
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                          <label htmlFor="Current Password">
+                            Current Password
+                          </label>
+                          <span className="absolute inset-y-0 left-2 top-4 flex items-center">
                             <FaLock className="h-4 w-5" />
                           </span>
                           <input
-                            type={showPassword ? "text" : "password"}
+                            type="password"
                             value={employeeDetails.employee_pass}
                             readOnly
                             className="mb-2 py-1 pl-8 w-full border rounded-lg"
                           />
-                          <span
-                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <FaEyeSlash className="h-5 w-5" />
-                            ) : (
-                              <FaEye className="h-5 w-5" />
-                            )}
-                          </span>
                         </div>
                         {/* New Password */}
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                          <label htmlFor="New Password">
+                            New Password
+                          </label>
+                          <span className="absolute inset-y-0 left-2 top-4 flex items-center">
                             <FaLock className="h-4 w-5" />
                           </span>
                           <input
@@ -218,7 +213,7 @@ const Sidebar = () => {
                             placeholder="Enter new password"
                           />
                           <span
-                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
+                            className="absolute inset-y-0 right-2 top-4 flex items-center cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
@@ -230,7 +225,10 @@ const Sidebar = () => {
                         </div>
                         {/* Confirm Password */}
                         <div className="relative -mb-2">
-                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                          <label htmlFor="Confirm New Password">
+                            Confirm New Password
+                          </label>
+                          <span className="absolute inset-y-0 left-2 top-4 flex items-center">
                             <FaLock className="h-4 w-5" />
                           </span>
                           <input
@@ -241,7 +239,7 @@ const Sidebar = () => {
                             placeholder="Confirm new password"
                           />
                           <span
-                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
+                            className="absolute inset-y-0 right-2 top-4 flex items-center cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
