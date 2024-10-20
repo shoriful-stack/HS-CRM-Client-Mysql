@@ -306,22 +306,22 @@ const Employees = () => {
                     <td className="px-1 py-1 border text-center">
                       {index + 1 + (currentPage - 1) * limit}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.employee_uid}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.employee_name}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.employee_phone}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.employee_email}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.department_name}
                     </td>
-                    <td className="px-3 py-1 border text-xs">
+                    <td className="px-1 py-1 border text-xs">
                       {employee.designation}
                     </td>
                     <td className="px-1 py-[1px] border text-center text-sm relative">

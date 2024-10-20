@@ -154,6 +154,10 @@ const Sidebar = () => {
                           <strong>Designation:</strong>{" "}
                           {employeeDetails.designation}
                         </p>
+                        <p className="text-base">
+                          <strong>Role:</strong>{" "}
+                          {employeeDetails.role === 1 ? "Admin" : "User"}
+                        </p>
                       </Modal.Body>
                       <Modal.Footer className="px-3 pt-2 pb-0 mb-2 font-lexend">
                         <Button

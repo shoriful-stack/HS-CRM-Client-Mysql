@@ -85,7 +85,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                     >
                                         <option className="hidden" value="">Select Department</option>
                                         {allDepartments.filter(department => department.department_status === 1).map((department) => (
-                                            <option key={department.id} value={department.department_name}>
+                                            <option key={department.id} value={department.id}>
                                                 {department.department_name}
                                             </option>
                                         ))}
@@ -102,7 +102,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                     >
                                         <option className="hidden" value="">Select Designation</option>
                                         {allDesignations.filter(designation => designation.designation_status === 1).map((designation) => (
-                                            <option key={designation._id} value={designation.designation}>
+                                            <option key={designation.id} value={designation.id}>
                                                 {designation.designation}
                                             </option>
                                         ))}

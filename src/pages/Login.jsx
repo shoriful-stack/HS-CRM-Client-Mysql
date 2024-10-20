@@ -30,7 +30,7 @@ const Login = () => {
                 toast.success('Login successful!');
     
                 // Redirect based on role
-                navigate(role === 'admin' ? '/dashboard/home' : '/dashboard/home');
+                navigate(role === 1 ? '/dashboard/home' : '/dashboard/home');
             } else {
                 toast.error('Invalid email or password!');
             }
