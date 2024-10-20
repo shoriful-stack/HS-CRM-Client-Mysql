@@ -1,6 +1,12 @@
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaMoneyCheckAlt, FaUsers } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaLock,
+  FaMoneyCheckAlt,
+  FaUsers,
+} from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { IoClose, IoMenu, IoSettings } from "react-icons/io5";
 import { RiProjectorFill } from "react-icons/ri";
@@ -12,6 +18,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -22,17 +29,17 @@ const Sidebar = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const axiosSecure = useAxiosSecure();
 
-  const name = JSON.parse(localStorage.getItem("name"))?.name || "User";
   const email = JSON.parse(localStorage.getItem("email"))?.email;
 
   // Fetch employee details
-  // useEffect(() => {
-  //   if (isProfileOpen && email) {
-  //     axiosSecure.get(`/employees/${email}`)
-  //       .then((response) => console.log(response.data))
-  //       .catch((error) => toast.error("Error fetching employee details"));
-  //   }
-  // }, [isProfileOpen, email]);
+  useEffect(() => {
+    if (isProfileOpen && email) {
+      axiosSecure
+        .get(`/employee/${email}`)
+        .then((response) => setEmployeeDetails(response.data))
+        .catch((error) => toast.error("Error fetching employee details"));
+    }
+  }, [isProfileOpen, email]);
 
   const handlePasswordChange = () => {
     if (newPassword !== confirmPassword) {
@@ -63,8 +70,8 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userPass");
+    localStorage.removeItem("email");
+    localStorage.removeItem("name");
     toast.success("Logged out successfully!");
     navigate("/");
   };
@@ -104,12 +111,14 @@ const Sidebar = () => {
                   tabIndex={0}
                   className="menu menu-sm dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-48"
                 >
-                  <li>
-                    <p className="font-medium pt-2 px-2">{name}</p>
+                  <li className="border-b-black border-b">
+                    <p className="font-medium pt-2 px-2">
+                      {employeeDetails.employee_name}
+                    </p>
                   </li>
-                  {/* <li>
+                  <li className="border-b-black border-b">
                     <button
-                      className="font-medium p-2"
+                      className="font-medium pt-1"
                       onClick={() => setProfileOpen(true)}
                     >
                       View Profile
@@ -117,23 +126,47 @@ const Sidebar = () => {
                     <Modal
                       show={isProfileOpen}
                       onClose={() => setProfileOpen(false)}
+                      className="max-w-sm mx-auto bg-opacity-0 font-lexend"
                     >
-                      <Modal.Header>Employee Details</Modal.Header>
-                      <Modal.Body>
-                        <p>Name: {employeeDetails.employee_name}</p>
-                        <p>Email: {employeeDetails.email}</p>
-                        {/* Add any other employee details you want to display */}
-                      {/* </Modal.Body>
-                      <Modal.Footer>
-                        <Button onClick={() => setProfileOpen(false)}>
+                      <Modal.Header className="px-3 pt-2 pb-1 mb-2 font-lexend">
+                        <span className="font-bold pl-16">
+                          {employeeDetails.employee_name}
+                        </span>
+                      </Modal.Header>
+                      <Modal.Body className="px-5 pb-3 pt-1 font-lexend">
+                        <p className="text-base">
+                          <strong>UID:</strong> {employeeDetails.employee_uid}
+                        </p>
+                        <p className="text-base">
+                          <strong>Email:</strong>{" "}
+                          {employeeDetails.employee_email}
+                        </p>
+                        <p className="text-base">
+                          <strong>Phone:</strong>{" "}
+                          {employeeDetails.employee_phone}
+                        </p>
+                        <p className="text-base">
+                          <strong>Department:</strong>{" "}
+                          {employeeDetails.department_name}
+                        </p>
+                        <p className="text-base">
+                          <strong>Designation:</strong>{" "}
+                          {employeeDetails.designation}
+                        </p>
+                      </Modal.Body>
+                      <Modal.Footer className="px-3 pt-2 pb-1 mb-2 font-lexend">
+                        <Button
+                          onClick={() => setProfileOpen(false)}
+                          className="mx-auto px-0 rounded"
+                        >
                           Close
                         </Button>
                       </Modal.Footer>
-                    </Modal> */}
-                  {/* </li> */}
+                    </Modal>
+                  </li>
                   <li>
                     <button
-                      className="font-medium p-2"
+                      className="font-medium pt-1"
                       onClick={() => setChangePasswordOpen(true)}
                     >
                       Change Password
@@ -144,35 +177,86 @@ const Sidebar = () => {
                       onClose={() => setChangePasswordOpen(false)}
                       className="max-w-sm mx-auto bg-opacity-0"
                     >
-                      <Modal.Header className="px-3 pt-2 pb-1 mb-2 font-lexend">Change Password</Modal.Header>
+                      <Modal.Header className="px-3 pt-2 pb-1 mb-2 font-lexend">
+                      <span className="font-bold pl-16">
+                          Change Password
+                        </span>
+                      </Modal.Header>
                       <Modal.Body className="px-5 pb-3 pt-1 font-lexend">
                         {/* Current Password */}
-                        <input
-                          type="password"
-                          value={employeeDetails.password} // Display current password (assuming this data is coming from your API)
-                          readOnly
-                          className="mb-2 py-1 px-2 w-full border rounded-lg"
-                          placeholder="Current password"
-                        />
+                        <div className="relative">
+                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                            <FaLock className="h-4 w-5" />
+                          </span>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={employeeDetails.employee_pass}
+                            readOnly
+                            className="mb-2 py-1 pl-8 w-full border rounded-lg"
+                          />
+                          <span
+                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <FaEyeSlash className="h-5 w-5" />
+                            ) : (
+                              <FaEye className="h-5 w-5" />
+                            )}
+                          </span>
+                        </div>
                         {/* New Password */}
-                        <input
-                          type="password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          className="mb-2 py-1 px-2 w-full border rounded-lg"
-                          placeholder="Enter new password"
-                        />
+                        <div className="relative">
+                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                            <FaLock className="h-4 w-5" />
+                          </span>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="mb-2 py-1 pl-8 w-full border rounded-lg"
+                            placeholder="Enter new password"
+                          />
+                          <span
+                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <FaEyeSlash className="h-5 w-5" />
+                            ) : (
+                              <FaEye className="h-5 w-5" />
+                            )}
+                          </span>
+                        </div>
                         {/* Confirm Password */}
-                        <input
-                          type="password"
-                          value={confirmPassword} // Add confirm password state
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="py-1 px-2 w-full border rounded-lg"
-                          placeholder="Confirm new password"
-                        />
+                        <div className="relative -mb-2">
+                          <span className="absolute inset-y-0 left-2 -top-2 flex items-center">
+                            <FaLock className="h-4 w-5" />
+                          </span>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="mb-2 py-1 pl-8 w-full border rounded-lg"
+                            placeholder="Confirm new password"
+                          />
+                          <span
+                            className="absolute inset-y-0 right-2 -top-2 flex items-center cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <FaEyeSlash className="h-5 w-5" />
+                            ) : (
+                              <FaEye className="h-5 w-5" />
+                            )}
+                          </span>
+                        </div>
                       </Modal.Body>
                       <Modal.Footer className="px-3 pt-2 pb-1 mb-2 font-lexend">
-                        <Button onClick={handlePasswordChange} className="mx-auto px-0 rounded">
+                        <Button
+                          onClick={handlePasswordChange}
+                          className="mx-auto px-0 rounded"
+                        >
                           Change Password
                         </Button>
                       </Modal.Footer>
@@ -182,7 +266,7 @@ const Sidebar = () => {
                     <Button
                       onClick={handleLogout}
                       gradientMonochrome="failure"
-                      className="w-full h-8 flex items-center justify-center"
+                      className="w-full h-8 flex items-center justify-center mt-1"
                     >
                       <TbLogout2 className="w-5 h-5" />
                       <span className="text-sm ml-2">Logout</span>

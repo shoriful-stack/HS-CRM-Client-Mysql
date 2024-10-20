@@ -302,7 +302,7 @@ const Employees = () => {
                 </tr>
               ) : (
                 employees?.map((employee, index) => (
-                  <tr key={employee._id} className="bg-gray-100">
+                  <tr key={employee.id} className="bg-gray-100">
                     <td className="px-1 py-1 border text-center">
                       {index + 1 + (currentPage - 1) * limit}
                     </td>

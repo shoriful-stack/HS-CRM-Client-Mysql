@@ -85,7 +85,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                     >
                                         <option className="hidden" value="">Select Department</option>
                                         {allDepartments.filter(department => department.department_status === 1).map((department) => (
-                                            <option key={department._id} value={department.department_name}>
+                                            <option key={department.id} value={department.department_name}>
                                                 {department.department_name}
                                             </option>
                                         ))}

@@ -13,11 +13,6 @@ const Login = () => {
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
 
-    // const adminInfo = {
-    //     email: 'admin@gmail.com',
-    //     password: 'admin'
-    // };
-
     const handleLogin = async (e) => {
         e.preventDefault();
         
@@ -25,9 +20,10 @@ const Login = () => {
             const response = await axiosSecure.post('/login', { email, password });
             
             if (response.status === 200) {
-                const { name, role } = response.data;
+                const { name, email, role } = response.data;
                 
                 // Save user information in localStorage
+                localStorage.setItem('email', JSON.stringify({ email }));
                 localStorage.setItem('name', JSON.stringify({ name }));
                 localStorage.setItem('role', JSON.stringify({ role }));
                 
@@ -47,7 +43,7 @@ const Login = () => {
     return (
         <div className="bg-slate-50 min-h-screen flex flex-col justify-center">
             <div className="text-center mb-1">
-                <h1 className="text-[22px] font-bold text-gray-800">CONTRACT MANAGEMENT SYSTEM</h1>
+                <h1 className="text-[22px] font-bold text-gray-800 mb-1">CONTRACT MANAGEMENT SYSTEM</h1>
             </div>
             <div className="flex items-center justify-center">
                 <div className="w-full max-w-[300px] px-5 py-4 bg-white rounded-lg shadow-lg">
@@ -65,7 +61,7 @@ const Login = () => {
                             </svg>
                         </div>
                     </div>
-                    <h3 className="text-2xl font-semibold text-center text-gray-700 mb-4 font-lexend">Login</h3>
+                    <h3 className="text-xl font-semibold text-center text-gray-700 mb-2 font-lexend">Login</h3>
                     <form onSubmit={handleLogin}>
                         <div className="form-group mb-2">
                             <div className="relative">
