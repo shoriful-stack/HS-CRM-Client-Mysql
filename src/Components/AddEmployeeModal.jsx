@@ -80,12 +80,12 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                     </label>
                                     <select
                                         name="department_name"
-                                        {...register("department_name", { required: true })}
+                                        {...register("department_name")}
                                         className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Department</option>
                                         {allDepartments.filter(department => department.department_status === 1).map((department) => (
-                                            <option key={department.id} value={department.id}>
+                                            <option key={department.id} value={department.name}>
                                                 {department.department_name}
                                             </option>
                                         ))}
@@ -97,12 +97,12 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                     </label>
                                     <select
                                         name="designation"
-                                        {...register("designation", { required: true })}
+                                        {...register("designation")}
                                         className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Designation</option>
                                         {allDesignations.filter(designation => designation.designation_status === 1).map((designation) => (
-                                            <option key={designation.id} value={designation.id}>
+                                            <option key={designation.id} value={designation.name}>
                                                 {designation.designation}
                                             </option>
                                         ))}
