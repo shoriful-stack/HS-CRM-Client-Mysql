@@ -37,28 +37,34 @@ const EditEmployeeModal = ({
       employee_name: data.employee_name,
       department_name: data.department_name,
       designation: data.designation,
-      employee_phone: data.employee_phone,
-      employee_email: data.employee_email,
-      employee_uid: data.employee_uid,
-      employee_pass: data.employee_pass,
+      employee_phone: data.employee_phone.trim(),
+      employee_email: data.employee_email.trim(),
+      employee_uid: data.employee_uid.trim(),
+      employee_pass: data.employee_pass
     };
-    const employeeRes = await axiosSecure.patch(
-      `/employees/${employee.id}`,
-      updatedEmployee
-    );
-    console.log(employeeRes.data);
-
-    if (employeeRes.data.modifiedCount > 0) {
-      reset();
-      refetch();
-      toast.success(`${data.employee_name} updated successfully`, {
-        autoClose: 1500,
-      });
-      closeEditEmployeeModal();
-    }
-    if (employeeRes.data.modifiedCount === 0) {
-      refetch();
-      closeEditEmployeeModal();
+    try{
+      const employeeRes = await axiosSecure.patch(
+        `/employees/${employee.id}`,
+        updatedEmployee
+      );
+      console.log(employeeRes.data);
+  
+      if (employeeRes?.data?.changedRows > 0) {
+        reset();
+        refetch();
+        toast.success(`${data.employee_name} updated successfully`, {
+          autoClose: 1500,
+        });
+        closeEditEmployeeModal();
+      }else {
+        reset();
+        // Handle the case where the update was not successful
+        toast.info("No changes made", { autoClose: 1500 });
+        closeEditEmployeeModal();
+      }
+    }catch (error) {
+      console.error("Failed to update employee:", error);
+      toast.error("This employee already exists", { autoClose: 1500 });
     }
   };
 
@@ -121,7 +127,7 @@ const EditEmployeeModal = ({
                       )
                       .map((department) => (
                         <option
-                          key={department._id}
+                          key={department.id}
                           value={department.department_name}
                         >
                           {department.department_name}
@@ -147,7 +153,7 @@ const EditEmployeeModal = ({
                       )
                       .map((designation) => (
                         <option
-                          key={designation._id}
+                          key={designation.id}
                           value={designation.designation}
                         >
                           {designation.designation}

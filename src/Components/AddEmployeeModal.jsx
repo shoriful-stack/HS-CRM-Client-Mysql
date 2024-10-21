@@ -76,7 +76,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                             <div className="grid grid-cols-2 gap-2">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Department*
+                                        Department
                                     </label>
                                     <select
                                         name="department_name"
@@ -93,7 +93,7 @@ const AddEmployeeModal = ({ isEmployeeModalOpen, setIsEmployeeModalOpen, refetch
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Designation*
+                                        Designation
                                     </label>
                                     <select
                                         name="designation"

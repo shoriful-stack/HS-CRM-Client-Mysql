@@ -20,22 +20,27 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
         const addProject = {
             project_name: data.project_name,
             customer_name: data.customer_name,
-            project_category: data.project_category,
-            department: data.department,
+            project_type: data.project_type,
+            department_name: data.department_name,
             hod: data.hod,
             pm: data.pm,
             year: data.year,
             phase: data.phase,
             project_code: data.project_code
         }
-        const projectRes = await axiosSecure.post('/projects', addProject);
-        console.log(projectRes.data);
-
-        if (projectRes.data.insertedId) {
+        try{
+            const projectRes = await axiosSecure.post('/projects', addProject);
+            console.log(projectRes.data);
+    
+            if (projectRes.data.insertedId) {
+                reset();
+                refetch();
+                toast.success(`${data.project_name} added successfully`, { autoClose: 1500 });
+                closeAddModal();
+            }
+        } catch (error) {
+            toast.error(`${data.project_name} already exists.`, {autoClose: 1500});
             reset();
-            refetch();
-            toast.success(`${data.project_name} added successfully`, { autoClose: 1500 });
-            closeAddModal();
         }
     }
 
@@ -69,9 +74,9 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                     >
                                         <option className="hidden" value="">Select Project</option>
                                         {allProjects
-                                            .filter(projects_master => projects_master.project_status === "1") // Adjust based on data type
+                                            .filter(projects_master => projects_master.project_status === 1)
                                             .map((project) => (
-                                                <option key={project._id} value={project.project_name}>
+                                                <option key={project.id} value={project.project_name}>
                                                     {project.project_name}
                                                 </option>
                                             ))}
@@ -88,10 +93,10 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                     >
                                         <option className="hidden" value="">Select Customer</option>
                                         {allCustomers
-                                            .filter(customer => customer.status === "1") // Adjust based on data type
+                                            .filter(customer => customer.customer_status === 1)
                                             .map((customer) => (
-                                                <option key={customer._id} value={customer.name}>
-                                                    {customer.name}
+                                                <option key={customer.id} value={customer.customer_name}>
+                                                    {customer.customer_name}
                                                 </option>
                                             ))}
                                     </select>
@@ -104,8 +109,8 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                         Project Category*
                                     </label>
                                     <select
-                                        name="project_category"
-                                        {...register("project_category", { required: true })}
+                                        name="project_type"
+                                        {...register("project_type", { required: true })}
                                         className="mt-1 block w-full text-sm border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Category</option>
@@ -119,13 +124,13 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                         Department*
                                     </label>
                                     <select
-                                        name="department"
-                                        {...register("department", { required: true })}
+                                        name="department_name"
+                                        {...register("department_name", { required: true })}
                                         className="mt-1 text-sm block w-full border border-gray-300 rounded-md shadow-sm p-1 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                                     >
                                         <option className="hidden" value="">Select Department</option>
-                                        {allDepartments.filter(department => department.department_status === "1").map((department) => (
-                                            <option key={department._id} value={department.department_name}>
+                                        {allDepartments.filter(department => department.department_status === 1).map((department) => (
+                                            <option key={department.id} value={department.department_name}>
                                                 {department.department_name}
                                             </option>
                                         ))}
@@ -144,7 +149,7 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                     >
                                         <option className="hidden" value="">Select HOD</option>
                                         {allEmployees.map((employee) => (
-                                            <option key={employee._id} value={employee.employee_name}>
+                                            <option key={employee.id} value={employee.employee_name}>
                                                 {employee.employee_name}
                                             </option>
                                         ))}
@@ -161,7 +166,7 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                                     >
                                         <option className="hidden" value="">Select Project Manager</option>
                                         {allEmployees.map((employee) => (
-                                            <option key={employee._id} value={employee.employee_name}>
+                                            <option key={employee.id} value={employee.employee_name}>
                                                 {employee.employee_name}
                                             </option>
                                         ))}
@@ -171,7 +176,7 @@ const AddProjectModal = ({ isAddModalOpen, setIsAddModalOpen, refetch }) => {
                             <div className="grid grid-cols-3 gap-2">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Year
+                                        Year*
                                     </label>
                                     <input
                                         type="number"

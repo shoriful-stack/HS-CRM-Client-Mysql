@@ -219,7 +219,7 @@ const Projects = () => {
     }
 
     return (
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-4  w-[1080px]">
         {/* Show customer range information */}
         <span className="text-sm text-gray-600">
           Showing {startProject} to {endProject} of {total} projects
@@ -264,7 +264,7 @@ const Projects = () => {
           </li>
         </ul>
       </div>
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-2 w-[1080px]">
         <h1 className="font-bold text-xl">Projects</h1>
         <div className="flex items-center gap-1">
           {/* Filter Button */}
@@ -292,9 +292,9 @@ const Projects = () => {
                       >
                         <option value="">All</option>
                         {allProjects
-                          .filter(projects_master => projects_master.project_status === "1") // Adjust based on data type
+                          .filter(projects_master => projects_master.project_status === 1) // Adjust based on data type
                           .map((project) => (
-                            <option key={project._id} value={project.project_name}>
+                            <option key={project.id} value={project.project_name}>
                               {project.project_name}
                             </option>
                           ))}
@@ -312,7 +312,7 @@ const Projects = () => {
                         {allCustomers
                           .filter(customer => customer.status === "1") // Adjust based on data type
                           .map((customer) => (
-                            <option key={customer._id} value={customer.name}>
+                            <option key={customer.id} value={customer.name}>
                               {customer.name}
                             </option>
                           ))}
@@ -346,7 +346,7 @@ const Projects = () => {
                         {allDepartments
                           .filter(department => department.department_status === "1") // Adjust based on data type
                           .map((department) => (
-                            <option key={department._id} value={department.department_name}>
+                            <option key={department.id} value={department.department_name}>
                               {department.department_name}
                             </option>
                           ))}
@@ -364,7 +364,7 @@ const Projects = () => {
                       >
                         <option value="">All</option>
                         {allEmployees.map((employee) => (
-                          <option key={employee._id} value={employee.employee_name}>
+                          <option key={employee.id} value={employee.employee_name}>
                             {employee.employee_name}
                           </option>
                         ))}
@@ -434,7 +434,7 @@ const Projects = () => {
         <Loader />
       ) : (
         <>
-          <table className="table table-xs w-full border-collapse border">
+          <table className="table table-xs w-[1120px] border-collapse border">
             <thead>
               <tr className="bg-gray-800 text-white">
                 <th className="px-2 py-2 border text-xs">Sl.No.</th>
@@ -442,7 +442,7 @@ const Projects = () => {
                 <th className="px-2 py-2 border text-xs">Year</th>
                 <th className="px-2 py-2 border text-xs">Project Name</th>
                 <th className="px-2 py-2 border text-xs">Project Category</th>
-                <th className="px-2 py-2 border text-xs">Customer Name</th>
+                <th className="px-1 py-2 border text-xs">Customer Name</th>
                 <th className="px-2 py-2 border text-xs">Department</th>
                 <th className="px-2 py-2 border text-xs">HOD</th>
                 <th className="px-2 py-2 border text-xs">Project Manager</th>
@@ -456,7 +456,7 @@ const Projects = () => {
                   <td colSpan="11" className="text-center py-4">No projects available.</td>
                 </tr>
               ) : (
-                projects.map((project, index) => <tr key={project._id} className="bg-gray-100">
+                projects.map((project, index) => <tr key={project.id} className="bg-gray-100">
                   <td className="px-1 py-1 border text-center">{index + 1 + (currentPage - 1) * limit}</td>
                   <td className="px-1 py-[1px] border text-center text-sm">
                     <div className="dropdown">
@@ -503,14 +503,14 @@ const Projects = () => {
                   </td>
                   <td className="px-1 py-1 border text-xs">{project.project_name}</td>
                   <td className="px-1 py-1 border text-xs">
-                    {project.project_category === '1' ? 'Service' :
-                      project.project_category === '2' ? 'Product' :
+                    {project.project_type === 1 ? 'Service' :
+                      project.project_type === 2 ? 'Product' :
                         'Supply & Service'}
                   </td>
                   <td className="px-1 py-1 border text-xs">{project.customer_name}</td>
-                  <td className="px-1 py-1 border text-xs">{project.department}</td>
-                  <td className="px-1 py-1 border text-xs">{project.hod}</td>
-                  <td className="px-1 py-1 border text-xs">{project.pm}</td>
+                  <td className="px-1 py-1 border text-xs">{project.department_name}</td>
+                  <td className="px-1 py-1 border text-xs">{project.hod_name}</td>
+                  <td className="px-1 py-1 border text-xs">{project.pm_name}</td>
                   <td className="px-1 py-1 border text-xs">{project.phase}</td>
                   <td className="px-1 py-1 border text-xs">{project.project_code}</td>
                 </tr>))

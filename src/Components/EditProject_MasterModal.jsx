@@ -29,7 +29,7 @@ const EditProject_MasterModal = ({
     console.log(data);
 
     const updatedProject = {
-      project_name: data.project_name,
+      project_name: data.project_name.trim(),
       project_code: data.project_code,
       project_status: data.project_status,
     };
