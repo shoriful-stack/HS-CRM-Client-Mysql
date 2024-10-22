@@ -1,13 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaEdit, FaFileImport, FaFilter, FaHistory, FaHome, FaRegEye } from "react-icons/fa";
+import {
+  FaEdit,
+  FaFileImport,
+  FaFilter,
+  FaHistory,
+  FaHome,
+  FaRegEye,
+} from "react-icons/fa";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { IoAddCircleSharp } from "react-icons/io5";
-import { TbDatabaseExport, TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
+import {
+  TbDatabaseExport,
+  TbPlayerTrackNextFilled,
+  TbPlayerTrackPrevFilled,
+} from "react-icons/tb";
 import { toast, ToastContainer } from "react-toastify";
 import useProject from "../Hooks/useProject";
 import Loader from "../Components/Loader";
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import AddProjectModal from "../Components/AddProjectModal";
 import EditProjectModal from "../Components/EditProjectModal";
@@ -35,13 +46,14 @@ const Projects = () => {
   // New states for filters
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
-    project_category: "", // 'Service', 'Product', 'Supply & Service'
+    project_type: "", // 'Service', 'Product', 'Supply & Service'
     project_name: "",
     customer_name: "",
     department: "",
+    hod: "",
     pm: "",
     year: "",
-    project_code: ""
+    project_code: "",
   });
 
   // Reference for clicking outside the filter dropdown
@@ -64,7 +76,7 @@ const Projects = () => {
   const applyFilter = (filterKey, value) => {
     setFilters((prev) => ({
       ...prev,
-      [filterKey]: value
+      [filterKey]: value,
     }));
     setCurrentPage(1); // Reset to first page on filter change
   };
@@ -73,7 +85,7 @@ const Projects = () => {
   const clearFilter = (filterKey) => {
     setFilters((prev) => ({
       ...prev,
-      [filterKey]: ""
+      [filterKey]: "",
     }));
     setCurrentPage(1);
   };
@@ -81,17 +93,17 @@ const Projects = () => {
   // Handler to clear all filters
   const clearAllFilters = () => {
     setFilters({
-      project_category: "", // 'Service', 'Product', 'Supply & Service'
+      project_type: "", // 'Service', 'Product', 'Supply & Service'
       project_name: "",
       customer_name: "",
       department: "",
+      hod: "",
       pm: "",
       year: "",
-      project_code: ""
+      project_code: "",
     });
     setCurrentPage(1);
   };
-
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
@@ -133,7 +145,9 @@ const Projects = () => {
       }
     } catch (error) {
       console.error("Import failed:", error);
-      toast.error("Import failed: " + (error.response?.data?.message || error.message));
+      toast.error(
+        "Import failed: " + (error.response?.data?.message || error.message)
+      );
     }
   };
 
@@ -141,7 +155,7 @@ const Projects = () => {
     try {
       // Fetch all projects from the new API endpoint
       const response = await axiosSecure.get("/projects/all", {
-        params: { ...filters } // Pass current filters as query parameters
+        params: { ...filters }, // Pass current filters as query parameters
       });
 
       if (response.status === 200) {
@@ -152,15 +166,18 @@ const Projects = () => {
           "Sl.No.": index + 1,
           "Project Name": project.project_name,
           "Customer Name": project.customer_name,
-          "Project Category": project.project_category === '1' ? 'Service' :
-            project.project_category === '2' ? 'Product' :
-              'Supply & Service',
-          "Department": project.department,
-          "HOD": project.hod,
+          "Project Category":
+            project.project_category === "1"
+              ? "Service"
+              : project.project_category === "2"
+              ? "Product"
+              : "Supply & Service",
+          Department: project.department,
+          HOD: project.hod,
           "Project Manager": project.pm,
-          "Year": project.year,
-          "Phase": project.phase,
-          "Project Code": project.project_code
+          Year: project.year,
+          Phase: project.phase,
+          "Project Code": project.project_code,
         }));
 
         // Create worksheet
@@ -168,11 +185,16 @@ const Projects = () => {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Projects");
 
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const excelBuffer = XLSX.write(workbook, {
+          bookType: "xlsx",
+          type: "array",
+        });
 
         // Download the file
-        const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-        saveAs(dataBlob, 'projects.xlsx');
+        const dataBlob = new Blob([excelBuffer], {
+          type: "application/octet-stream",
+        });
+        saveAs(dataBlob, "projects.xlsx");
       }
     } catch (error) {
       console.error("Failed to export projects:", error);
@@ -211,7 +233,9 @@ const Projects = () => {
         <button
           key={i}
           onClick={() => handlePageSelect(i)}
-          className={`px-2 py-[2px] rounded-md mx-[2px] ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-2 py-[2px] rounded-md mx-[2px] ${
+            i === currentPage ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
         >
           {i}
         </button>
@@ -245,7 +269,7 @@ const Projects = () => {
       </div>
     );
   };
-  return ( 
+  return (
     <div className="font-lexend -mt-2">
       {/* Breadcrumbs Component */}
       <div className="breadcrumbs text-sm">
@@ -284,17 +308,27 @@ const Projects = () => {
                   <div className="grid grid-cols-2 gap-2 mb-1">
                     {/* Project Name Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Project Name</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Project Name
+                      </label>
                       <select
                         value={filters.project_name}
-                        onChange={(e) => applyFilter('project_name', e.target.value)}
+                        onChange={(e) =>
+                          applyFilter("project_name", e.target.value)
+                        }
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       >
                         <option value="">All</option>
                         {allProjects
-                          .filter(projects_master => projects_master.project_status === 1) // Adjust based on data type
+                          .filter(
+                            (projects_master) =>
+                              projects_master.project_status === 1
+                          ) // Adjust based on data type
                           .map((project) => (
-                            <option key={project.id} value={project.project_name}>
+                            <option
+                              key={project.id}
+                              value={project.project_name}
+                            >
                               {project.project_name}
                             </option>
                           ))}
@@ -302,18 +336,25 @@ const Projects = () => {
                     </div>
                     {/* Customer Name Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Customer Name</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Customer Name
+                      </label>
                       <select
                         value={filters.customer_name}
-                        onChange={(e) => applyFilter('customer_name', e.target.value)}
+                        onChange={(e) =>
+                          applyFilter("customer_name", e.target.value)
+                        }
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       >
                         <option value="">All</option>
                         {allCustomers
-                          .filter(customer => customer.status === "1") // Adjust based on data type
+                          .filter((customer) => customer.customer_status === 1) // Adjust based on data type
                           .map((customer) => (
-                            <option key={customer.id} value={customer.name}>
-                              {customer.name}
+                            <option
+                              key={customer.id}
+                              value={customer.customer_name}
+                            >
+                              {customer.customer_name}
                             </option>
                           ))}
                       </select>
@@ -322,81 +363,131 @@ const Projects = () => {
                   <div className="grid grid-cols-2 gap-2">
                     {/* Project Type Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Project Type</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Project Type
+                      </label>
                       <select
-                        value={filters.project_category}
-                        onChange={(e) => applyFilter('project_category', e.target.value)}
+                        value={filters.project_type}
+                        onChange={(e) =>
+                          applyFilter("project_type", e.target.value)
+                        }
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       >
                         <option value="">All</option>
-                        <option value="Service">Service</option>
-                        <option value="Product">Product</option>
-                        <option value="Supply & Service">Supply & Service</option>
+                        <option value="1">Service</option>
+                        <option value="2">Product</option>
+                        <option value="3">Supply & Service</option>
                       </select>
                     </div>
                     {/* Department Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Department</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Department
+                      </label>
                       <select
                         value={filters.department}
-                        onChange={(e) => applyFilter('department', e.target.value)}
+                        onChange={(e) =>
+                          applyFilter("department", e.target.value)
+                        }
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       >
                         <option value="">All</option>
                         {allDepartments
-                          .filter(department => department.department_status === "1") // Adjust based on data type
+                          .filter(
+                            (department) => department.department_status === 1
+                          ) // Adjust based on data type
                           .map((department) => (
-                            <option key={department.id} value={department.department_name}>
+                            <option
+                              key={department.id}
+                              value={department.department_name}
+                            >
                               {department.department_name}
                             </option>
                           ))}
                       </select>
                     </div>
                   </div>
-                  {/* Project Manager */}
-                  <div className="my-2 grid grid-cols-4 gap-2">
-                    <div className="col-span-2">
-                      <label className="block text-xs font-medium text-gray-700">Project Manager</label>
+                  <div className="my-2 grid grid-cols-2 gap-2">
+                    {/* HOD Filter */}
+                    <div className="">
+                      <label className="block text-xs font-medium text-gray-700">
+                        HOD
+                      </label>
                       <select
-                        value={filters.pm}
-                        onChange={(e) => applyFilter('pm', e.target.value)}
+                        value={filters.hod}
+                        onChange={(e) => applyFilter("hod", e.target.value)}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       >
                         <option value="">All</option>
                         {allEmployees.map((employee) => (
-                          <option key={employee.id} value={employee.employee_name}>
+                          <option
+                            key={employee.id}
+                            value={employee.employee_name}
+                          >
                             {employee.employee_name}
                           </option>
                         ))}
                       </select>
                     </div>
+                    {/* Project Manager */}
+                    <div className="">
+                      <label className="block text-xs font-medium text-gray-700">
+                        Project Manager
+                      </label>
+                      <select
+                        value={filters.pm}
+                        onChange={(e) => applyFilter("pm", e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
+                      >
+                        <option value="">All</option>
+                        {allEmployees.map((employee) => (
+                          <option
+                            key={employee.id}
+                            value={employee.employee_name}
+                          >
+                            {employee.employee_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
                     {/* Year Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Year</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Year
+                      </label>
                       <input
                         type="number"
+                        placeholder="YYYY"
+                        min="2017"
+                        max="2100"
                         value={filters.year}
-                        onChange={(e) => applyFilter('year', e.target.value)}
+                        onChange={(e) => applyFilter("year", e.target.value)}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       />
                     </div>
                     {/* Project Code Filter */}
                     <div className="">
-                      <label className="block text-xs font-medium text-gray-700">Project Code</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Project Code
+                      </label>
                       <input
                         type="text"
                         value={filters.project_code}
-                        onChange={(e) => applyFilter('project_code', e.target.value)}
+                        onChange={(e) =>
+                          applyFilter("project_code", e.target.value)
+                        }
                         className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                       />
                     </div>
                   </div>
 
                   {/* Clear Filters */}
-                  <div className="flex justify-end">
+                  <div className="flex justify-end mt-2">
                     <button
                       onClick={clearAllFilters}
-                      className="text-xs text-red-500 hover:underline"
+                      className="text-xs px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-400"
                     >
                       Clear All
                     </button>
@@ -453,78 +544,122 @@ const Projects = () => {
             <tbody>
               {projects.length === 0 ? (
                 <tr>
-                  <td colSpan="11" className="text-center py-4">No projects available.</td>
+                  <td colSpan="11" className="text-center py-4">
+                    No projects available.
+                  </td>
                 </tr>
               ) : (
-                projects.map((project, index) => <tr key={project.id} className="bg-gray-100">
-                  <td className="px-1 py-1 border text-center">{index + 1 + (currentPage - 1) * limit}</td>
-                  <td className="px-1 py-[1px] border text-center text-sm">
-                    <div className="dropdown">
-                      <div
-                        tabIndex={0}
-                        role="button"
-                        className="px-[6px] py-[5px] rounded-md text-white bg-blue-600"
-                      >
-                        <IoMdArrowDropdownCircle className="text-2xl" />
-                      </div>
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content bg-base-100 text-start w-32 pl-3 py-2 rounded-md shadow z-50"
-                      >
-                        {/* <li>
+                projects.map((project, index) => (
+                  <tr key={project.id} className="bg-gray-100">
+                    <td className="px-1 py-1 border text-center">
+                      {index + 1 + (currentPage - 1) * limit}
+                    </td>
+                    <td className="px-1 py-[1px] border text-center text-sm">
+                      <div className="dropdown">
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          className="px-[6px] py-[5px] rounded-md text-white bg-blue-600"
+                        >
+                          <IoMdArrowDropdownCircle className="text-2xl" />
+                        </div>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content bg-base-100 text-start w-32 pl-3 py-2 rounded-md shadow z-50"
+                        >
+                          {/* <li>
                           <a href="#" className="flex items-center space-x-2">
                             <FaRegEye />
                             <span>View</span>
                           </a>
                         </li> */}
-                        <li>
-                          <button onClick={() => openEditTenderModal(project)} className="flex items-center space-x-2">
-                            <FaEdit />
-                            <span>Edit</span>
-                          </button>
-                        </li>
-                        <li>
-                          <button onClick={() => openAddContractModal(project)} className="flex items-center space-x-2">
-                            <IoAddCircleSharp className="-ml-[1px]" />
-                            <span>Add Contract</span>
-                          </button>
-                        </li>
-                        {/* <li>
+                          <li>
+                            <button
+                              onClick={() => openEditTenderModal(project)}
+                              className="flex items-center space-x-2"
+                            >
+                              <FaEdit />
+                              <span>Edit</span>
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              onClick={() => openAddContractModal(project)}
+                              className="flex items-center space-x-2"
+                            >
+                              <IoAddCircleSharp className="-ml-[1px]" />
+                              <span>Add Contract</span>
+                            </button>
+                          </li>
+                          {/* <li>
                           <a href="#" className="flex items-center space-x-2">
                             <FaHistory />
                             <span>Project History</span>
                           </a>
                         </li> */}
-                      </ul>
-                    </div>
-                  </td>
-                  <td className="px-1 py-1 border text-xs">
-                    {project.year}
-                  </td>
-                  <td className="px-1 py-1 border text-xs">{project.project_name}</td>
-                  <td className="px-1 py-1 border text-xs">
-                    {project.project_type === 1 ? 'Service' :
-                      project.project_type === 2 ? 'Product' :
-                        'Supply & Service'}
-                  </td>
-                  <td className="px-1 py-1 border text-xs">{project.customer_name}</td>
-                  <td className="px-1 py-1 border text-xs">{project.department_name}</td>
-                  <td className="px-1 py-1 border text-xs">{project.hod_name}</td>
-                  <td className="px-1 py-1 border text-xs">{project.pm_name}</td>
-                  <td className="px-1 py-1 border text-xs">{project.phase}</td>
-                  <td className="px-1 py-1 border text-xs">{project.project_code}</td>
-                </tr>))
-              }
+                        </ul>
+                      </div>
+                    </td>
+                    <td className="px-1 py-1 border text-xs">{project.year}</td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.project_name}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.project_type === 1
+                        ? "Service"
+                        : project.project_type === 2
+                        ? "Product"
+                        : "Supply & Service"}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.customer_name}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.department_name}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.hod_name}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.pm_name}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.phase}
+                    </td>
+                    <td className="px-1 py-1 border text-xs">
+                      {project.project_code}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
           {/* Pagination control */}
           {renderPagination()}
         </>
       )}
-      <AddProjectModal isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} refetch={refetch} />
-      <EditProjectModal editProjectModalOpen={editProjectModalOpen} setEditProjectModalOpen={setEditProjectModalOpen} project={selectedProject} refetch={refetch} />
-      <ImportProjectsModal isOpen={importModalOpen} onClose={() => setImportModalOpen(false)} onImport={handleImport} />
-      <AddContractModal isAddContractModalOpen={isAddContractModalOpen} setIsAddContractModalOpen={setIsAddContractModalOpen} selectedProject={contractProject} refetch={refetch} />
+      <AddProjectModal
+        isAddModalOpen={isAddModalOpen}
+        setIsAddModalOpen={setIsAddModalOpen}
+        refetch={refetch}
+      />
+      <EditProjectModal
+        editProjectModalOpen={editProjectModalOpen}
+        setEditProjectModalOpen={setEditProjectModalOpen}
+        project={selectedProject}
+        refetch={refetch}
+      />
+      <ImportProjectsModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onImport={handleImport}
+      />
+      <AddContractModal
+        isAddContractModalOpen={isAddContractModalOpen}
+        setIsAddContractModalOpen={setIsAddContractModalOpen}
+        selectedProject={contractProject}
+        refetch={refetch}
+      />
       <ToastContainer></ToastContainer>
     </div>
   );
