@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
 
 const ImportModal = ({ isOpen, onClose, onImport }) => {
     const [file, setFile] = useState(null);
@@ -11,37 +10,24 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
 
     const handleImport = async (event) => {
         event.preventDefault();
-
+    
         if (!file) {
             toast.error("Please upload a file!");
             return;
         }
-
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const customers = XLSX.utils.sheet_to_json(worksheet);
-
-                if (customers.length === 0) {
-                    toast.error("No data found in the file!");
-                    return;
-                }
-
-                // Pass the parsed data to the parent component
-                await onImport(customers);
-                toast.success(`${customers.length} customers imported successfully!`);
-                onClose();
-            } catch (error) {
-                console.error("Import failed:", error);
-                toast.error("Import failed: " + error.message);
-            }
-        };
-
-        reader.readAsArrayBuffer(file);
-    };
+    
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        try {
+            await onImport(formData);
+            toast.success(`${file.name} imported successfully!`);
+            onClose();
+        } catch (error) {
+            console.error("Import failed:", error);
+            toast.error("Import failed: " + error.message);
+        }
+    };    
 
     return (
         isOpen && (
@@ -51,15 +37,15 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
                     <form onSubmit={handleImport}>
                         <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
                         <div className="mt-2 flex justify-end">
-                            <button type="submit" className="bg-blue-500 text-white px-2 py-2 rounded-md text-sm">
-                                Import
-                            </button>
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="ml-2 bg-gray-500 text-white px-2 py-2 rounded-md text-sm"
+                                className="mr-2 bg-gray-500 text-white px-2 py-2 rounded-md text-sm"
                             >
                                 Cancel
+                            </button>
+                            <button type="submit" className="bg-blue-500 text-white px-2 py-2 rounded-md text-sm">
+                                Import
                             </button>
                         </div>
                     </form>

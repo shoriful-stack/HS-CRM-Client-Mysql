@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import ImportModal from "../Components/ImportModal";
 import debounce from "lodash.debounce";
+import { AiFillEdit } from "react-icons/ai";
 
 const Customers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,12 +58,12 @@ const Customers = () => {
 
     const handleImport = async (customersData) => {
         try {
-            const response = await axiosSecure.post("/customers/all", customersData, {
+            const response = await axiosSecure.post("/customers/import", customersData, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data", 
                 },
             });
-
+    
             if (response.status === 200) {
                 refetch();
             } else {
@@ -75,40 +76,40 @@ const Customers = () => {
     };
 
 
-    const handleExport = async () => {
-        try {
-            // Fetch all customers from the new API endpoint
-            const response = await axiosSecure.get("/customers/all");
+    // const handleExport = async () => {
+    //     try {
+    //         // Fetch all customers from the new API endpoint
+    //         const response = await axiosSecure.get("/customers/all");
 
-            if (response.status === 200) {
-                const allCustomers = response.data;
+    //         if (response.status === 200) {
+    //             const allCustomers = response.data;
 
-                // Prepare the data for export
-                const data = allCustomers.map((customer, index) => ({
-                    "SL.NO.": index + 1,
-                    "Name": customer.name,
-                    "Phone": customer.phone,
-                    "Email": customer.email,
-                    "Address": customer.address,
-                    "Status": customer.status === "1" ? "Active" : "Inactive",
-                }));
+    //             // Prepare the data for export
+    //             const data = allCustomers.map((customer, index) => ({
+    //                 "SL.NO.": index + 1,
+    //                 "Name": customer.name,
+    //                 "Phone": customer.phone,
+    //                 "Email": customer.email,
+    //                 "Address": customer.address,
+    //                 "Status": customer.status === "1" ? "Active" : "Inactive",
+    //             }));
 
-                // Create worksheet
-                const worksheet = XLSX.utils.json_to_sheet(data);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Customers");
+    //             // Create worksheet
+    //             const worksheet = XLSX.utils.json_to_sheet(data);
+    //             const workbook = XLSX.utils.book_new();
+    //             XLSX.utils.book_append_sheet(workbook, worksheet, "Customers");
 
-                const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    //             const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-                // Download the file
-                const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-                saveAs(dataBlob, 'customers.xlsx');
-            }
-        } catch (error) {
-            console.error("Failed to export customers:", error);
-            // Show an error message if needed
-        }
-    };
+    //             // Download the file
+    //             const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    //             saveAs(dataBlob, 'customers.xlsx');
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to export customers:", error);
+    //         // Show an error message if needed
+    //     }
+    // };
 
     // Pagination Handlers
     const handlePrevious = () => {
@@ -228,13 +229,13 @@ const Customers = () => {
                         <FaFileImport className="w-5 h-4" />
                         <span className="text-xs">Import</span>
                     </button>
-                    <button
+                    {/* <button
                         onClick={handleExport}
                         className="bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-black flex items-center gap-1"
                     >
                         <TbDatabaseExport className="w-5 h-4" />
                         <span className="text-xs">Export</span>
-                    </button>
+                    </button> */}
                 </div>
             </div>
 
@@ -277,8 +278,8 @@ const Customers = () => {
                                         </p>
                                     </td>
                                     <td className="px-2 py-1 border text-center">
-                                        <button onClick={() => openEditModal(customer)} className="bg-blue-500 rounded-md px-2 py-2 w-8">
-                                            <FaEdit className="bg-blue-500 text-white" />
+                                        <button onClick={() => openEditModal(customer)} className="bg-blue-500 rounded-md pl-[6px] py-[3px] w-8">
+                                        <AiFillEdit className="bg-blue-500 text-white font-bold text-xl" />
                                         </button>
                                     </td>
                                 </tr>))
