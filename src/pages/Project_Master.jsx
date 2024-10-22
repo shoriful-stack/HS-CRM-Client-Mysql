@@ -10,6 +10,7 @@ import EditProject_MasterModal from "../Components/EditProject_MasterModal";
 import ImportProjects_MasterModal from "../Components/ImportProjects_MasterModal";
 import debounce from "lodash.debounce";
 import { AiFillEdit } from "react-icons/ai";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const Project_Master = () => {
     const [isProject_MasterModalOpen, setIsProject_MasterModalOpen] = useState(false);
@@ -18,6 +19,7 @@ const Project_Master = () => {
     const [importModalOpen, setImportModalOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const axiosSecure = useAxiosSecure();
 
     // Debounce the search input to prevent excessive API calls
     const debounceSearch = debounce((value) => {
@@ -55,12 +57,12 @@ const Project_Master = () => {
 
     const handleImport = async (projects_masterData) => {
         try {
-            const response = await axiosSecure.post("/projects_master/all", projects_masterData, {
+            const response = await axiosSecure.post("/projects_master/import", projects_masterData, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data", 
                 },
             });
-
+    
             if (response.status === 200) {
                 refetch();
             } else {
@@ -71,6 +73,7 @@ const Project_Master = () => {
             toast.error("Import failed: " + (error.response?.data?.message || error.message));
         }
     };
+    
 
     // Pagination Handlers
     const handlePrevious = () => {

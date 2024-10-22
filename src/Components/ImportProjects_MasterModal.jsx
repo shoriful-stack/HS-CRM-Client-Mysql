@@ -11,37 +11,24 @@ const ImportProjects_MasterModal = ({ isOpen, onClose, onImport }) => {
 
     const handleImport = async (event) => {
         event.preventDefault();
-
+    
         if (!file) {
             toast.error("Please upload a file!");
             return;
         }
-
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const projects = XLSX.utils.sheet_to_json(worksheet);
-
-                if (projects.length === 0) {
-                    toast.error("No data found in the file!");
-                    return;
-                }
-
-                // Pass the parsed data to the parent component
-                await onImport(projects);
-                toast.success(`${projects.length} projects imported successfully!`);
-                onClose();
-            } catch (error) {
-                console.error("Import failed:", error);
-                toast.error("Import failed: " + error.message);
-            }
-        };
-
-        reader.readAsArrayBuffer(file);
-    };
+    
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        try {
+            await onImport(formData);
+            toast.success(`${file.name} imported successfully!`);
+            onClose();
+        } catch (error) {
+            console.error("Import failed:", error);
+            toast.error("Import failed: " + error.message);
+        }
+    };    
 
     return (
         isOpen && (
