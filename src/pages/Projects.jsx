@@ -132,11 +132,15 @@ const Projects = () => {
 
   const handleImport = async (projectsData) => {
     try {
-      const response = await axiosSecure.post("/projects/all", projectsData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosSecure.post(
+        "/projects/import",
+        projectsData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 200) {
         refetch();
@@ -525,7 +529,7 @@ const Projects = () => {
         <Loader />
       ) : (
         <>
-          <table className="table table-xs w-[1120px] border-collapse border">
+          <table className="table table-xs w-[1150px] border-collapse border">
             <thead>
               <tr className="bg-gray-800 text-white">
                 <th className="px-2 py-2 border text-xs">Sl.No.</th>
