@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FaHome } from "react-icons/fa";
+import { FaFileImport, FaHome } from "react-icons/fa";
 import { IoAddCircleSharp, IoSearchSharp, IoSettings } from "react-icons/io5";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Components/Loader";
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
 import EditDesignationModal from "../Components/EditDesignationModal";
@@ -9,13 +9,17 @@ import AddDesignationModal from "../Components/AddDesignationModal";
 import useDesignation from "../Hooks/useDesignation";
 import debounce from "lodash.debounce";
 import { AiFillEdit } from "react-icons/ai";
+import ImportDesignationModal from "../Components/ImportDesignaitonModal";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const Designation = () => {
     const [isDesignationModalOpen, setIsDesignationModalOpen] = useState(false);
     const [editDesignationModalOpen, setEditDesignationModalOpen] = useState(false);
     const [selectedDesignation, setSelectedDesignation] = useState(null);
+    const [importModalOpen, setImportModalOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const axiosSecure = useAxiosSecure();
 
     // Debounce the search input to prevent excessive API calls
     const debounceSearch = debounce((value) => {
@@ -46,6 +50,29 @@ const Designation = () => {
         setSelectedDesignation(designation);
         setEditDesignationModalOpen(true);
     }
+
+    const openImportModal = () => {
+        setImportModalOpen(true);
+    };
+
+    const handleImport = async (designationsData) => {
+        try {
+            const response = await axiosSecure.post("/designations/import", designationsData, {
+                headers: {
+                    "Content-Type": "multipart/form-data", 
+                },
+            });
+    
+            if (response.status === 200) {
+                refetch();
+            } else {
+                toast.error("Import failed!");
+            }
+        } catch (error) {
+            console.error("Import failed:", error);
+            toast.error("Import failed: " + (error.response?.data?.message || error.message));
+        }
+    };
 
     // Pagination Handlers
     const handlePrevious = () => {
@@ -159,6 +186,14 @@ const Designation = () => {
                         <IoAddCircleSharp className="w-5 h-4" />
                         <span className="text-xs">Add New</span>
                     </button>
+                    {/* import button */}
+                    <button
+                        onClick={openImportModal}
+                        className="bg-blue-700 text-white px-2 py-2 rounded-md hover:bg-black flex items-center gap-1"
+                    >
+                        <FaFileImport className="w-5 h-4" />
+                        <span className="text-xs">Import</span>
+                    </button>
                 </div>
             </div>
 
@@ -211,6 +246,7 @@ const Designation = () => {
 
             <AddDesignationModal isDesignationModalOpen={isDesignationModalOpen} setIsDesignationModalOpen={setIsDesignationModalOpen} refetch={refetch} />
             <EditDesignationModal editDesignationModalOpen={editDesignationModalOpen} setEditDesignationModalOpen={setEditDesignationModalOpen} designation={selectedDesignation} refetch={refetch}></EditDesignationModal>
+            <ImportDesignationModal isOpen={importModalOpen} onClose={() => setImportModalOpen(false)} onImport={handleImport} />
             <ToastContainer></ToastContainer>
         </div>
     );

@@ -85,66 +85,64 @@ const Employees = () => {
 
   const handleImport = async (employeesData) => {
     try {
-      const response = await axiosSecure.post("/employees/all", employeesData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 200) {
-        refetch();
-      } else {
-        toast.error("Import failed!");
-      }
-    } catch (error) {
-      console.error("Import failed:", error);
-      toast.error(
-        "Import failed: " + (error.response?.data?.message || error.message)
-      );
-    }
-  };
-
-  const handleExport = async () => {
-    try {
-      // Fetch all Employees from the new API endpoint
-      const response = await axiosSecure.get("/employees/all");
-
-      if (response.status === 200) {
-        const allEmployees = response.data;
-
-        // Prepare the data for export
-        const data = allEmployees.map((employee, index) => ({
-          "Sl.No.": index + 1,
-          UID: employee.employee_uid,
-          Name: employee.employee_name,
-          Phone: employee.employee_phone,
-          Email: employee.employee_email,
-          Department: employee.department_name,
-          Designation: employee.designation,
-          Password: employee.employee_pass,
-        }));
-
-        // Create worksheet
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
-
-        const excelBuffer = XLSX.write(workbook, {
-          bookType: "xlsx",
-          type: "array",
+        const response = await axiosSecure.post("/employees/import", employeesData, {
+            headers: {
+                "Content-Type": "multipart/form-data", 
+            },
         });
 
-        // Download the file
-        const dataBlob = new Blob([excelBuffer], {
-          type: "application/octet-stream",
-        });
-        saveAs(dataBlob, "employees.xlsx");
-      }
+        if (response.status === 200) {
+            refetch();
+        } else {
+            toast.error("Import failed!");
+        }
     } catch (error) {
-      console.error("Failed to export Employees:", error);
-      // Show an error message if needed
+        console.error("Import failed:", error);
+        toast.error("Import failed: " + (error.response?.data?.message || error.message));
     }
-  };
+};
+
+  // const handleExport = async () => {
+  //   try {
+  //     // Fetch all Employees from the new API endpoint
+  //     const response = await axiosSecure.get("/employees/all");
+
+  //     if (response.status === 200) {
+  //       const allEmployees = response.data;
+
+  //       // Prepare the data for export
+  //       const data = allEmployees.map((employee, index) => ({
+  //         "Sl.No.": index + 1,
+  //         UID: employee.employee_uid,
+  //         Name: employee.employee_name,
+  //         Phone: employee.employee_phone,
+  //         Email: employee.employee_email,
+  //         Department: employee.department_name,
+  //         Designation: employee.designation,
+  //         Password: employee.employee_pass,
+  //       }));
+
+  //       // Create worksheet
+  //       const worksheet = XLSX.utils.json_to_sheet(data);
+  //       const workbook = XLSX.utils.book_new();
+  //       XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
+
+  //       const excelBuffer = XLSX.write(workbook, {
+  //         bookType: "xlsx",
+  //         type: "array",
+  //       });
+
+  //       // Download the file
+  //       const dataBlob = new Blob([excelBuffer], {
+  //         type: "application/octet-stream",
+  //       });
+  //       saveAs(dataBlob, "employees.xlsx");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to export Employees:", error);
+  //     // Show an error message if needed
+  //   }
+  // };
 
   // Pagination Handlers
   const handlePrevious = () => {
@@ -265,13 +263,13 @@ const Employees = () => {
             <FaFileImport className="w-5 h-4" />
             <span className="text-xs">Import</span>
           </button>
-          <button
+          {/* <button
             onClick={handleExport}
             className="bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-black flex items-center gap-1"
           >
             <TbDatabaseExport className="w-5 h-4" />
             <span className="text-xs">Export</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
