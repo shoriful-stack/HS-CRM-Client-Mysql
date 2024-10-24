@@ -28,8 +28,8 @@ const Contracts = () => {
     // New states for filters
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filters, setFilters] = useState({
-        project_category: "", // 'Service', 'Product', 'Supply & Service'
-        contractStatus: "", // 'Expired', 'Not Expired'
+        project_type: "", // 'Service', 'Product', 'Supply & Service'
+        contract_status: "", // 'Expired', 'Not Expired'
         project_name: "",
         customer_name: "",
         signingDateFrom: "",
@@ -96,8 +96,8 @@ const Contracts = () => {
     // Handler to clear all filters
     const clearAllFilters = () => {
         setFilters({
-            project_category: "",
-            contractStatus: "",
+            project_type: "",
+            contract_status: "",
             project_name: "",
             customer_name: "",
             signingDateFrom: "",
@@ -227,7 +227,7 @@ const Contracts = () => {
         }
 
         return (
-            <div className="flex justify-between items-center mt-4 w-[1037px]">
+            <div className="flex justify-between items-center mt-4 w-[1075px]">
                 {/* Show customer range information */}
                 <span className="text-sm text-gray-600">
                     Showing {startProject} to {endProject} of {total} contracts
@@ -272,7 +272,7 @@ const Contracts = () => {
                     </li>
                 </ul>
             </div>
-            <div className="flex justify-between items-center mb-2 w-[1037px]">
+            <div className="flex justify-between items-center mb-2 w-[1075px]">
                 <h1 className="font-bold text-xl">Contracts</h1>
                 <div className="flex items-center gap-1">
                     {/* Filter Button */}
@@ -300,9 +300,9 @@ const Contracts = () => {
                                             >
                                                 <option value="">All</option>
                                                 {allProjects
-                                                    .filter(projects_master => projects_master.project_status === "1") // Adjust based on data type
+                                                    .filter(projects_master => projects_master.project_status === 1) // Adjust based on data type
                                                     .map((project) => (
-                                                        <option key={project._id} value={project.project_name}>
+                                                        <option key={project.id} value={project.project_name}>
                                                             {project.project_name}
                                                         </option>
                                                     ))}
@@ -318,10 +318,10 @@ const Contracts = () => {
                                             >
                                                 <option value="">All</option>
                                                 {allCustomers
-                                                    .filter(customer => customer.status === "1") // Adjust based on data type
+                                                    .filter(customer => customer.customer_status === 1) // Adjust based on data type
                                                     .map((customer) => (
-                                                        <option key={customer._id} value={customer.name}>
-                                                            {customer.name}
+                                                        <option key={customer.id} value={customer.customer_name}>
+                                                            {customer.customer_name}
                                                         </option>
                                                     ))}
                                             </select>
@@ -332,27 +332,27 @@ const Contracts = () => {
                                         <div className="">
                                             <label className="block text-xs font-medium text-gray-700">Project Type</label>
                                             <select
-                                                value={filters.project_category}
-                                                onChange={(e) => applyFilter('project_category', e.target.value)}
+                                                value={filters.project_type}
+                                                onChange={(e) => applyFilter('project_type', e.target.value)}
                                                 className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                                             >
                                                 <option value="">All</option>
-                                                <option value="Service">Service</option>
-                                                <option value="Product">Product</option>
-                                                <option value="Supply & Service">Supply & Service</option>
+                                                <option value="1">Service</option>
+                                                <option value="2">Product</option>
+                                                <option value="3">Supply & Service</option>
                                             </select>
                                         </div>
                                         {/* Contract Status Filter */}
                                         <div className="">
                                             <label className="block text-xs font-medium text-gray-700">Contract Status</label>
                                             <select
-                                                value={filters.contractStatus}
-                                                onChange={(e) => applyFilter('contractStatus', e.target.value)}
+                                                value={filters.contract_status}
+                                                onChange={(e) => applyFilter('contract_status', e.target.value)}
                                                 className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-xs"
                                             >
                                                 <option value="">All</option>
-                                                <option value="Not Expired">Not Expired</option>
-                                                <option value="Expired">Expired</option>
+                                                <option value="1">Not Expired</option>
+                                                <option value="0">Expired</option>
                                             </select>
                                         </div>
                                     </div>
@@ -522,10 +522,10 @@ const Contracts = () => {
                                         </div>
                                     </td>
                                     <td className="px-1 py-1 border text-xs">{contract.contract_title}</td>
-                                    <td className="px-1 py-1 border text-xs">{contract.project_details ? contract.project_details.project_name : 'N/A'}</td>
+                                    <td className="px-1 py-1 border text-xs">{contract.project_name}</td>
                                     <td className="px-1 py-1 border text-xs">
-                                        {contract.project_category === '1' ? 'Service' :
-                                            contract.project_category === '2' ? 'Product' :
+                                        {contract.project_type === 1 ? 'Service' :
+                                            contract.project_type === 2 ? 'Product' :
                                                 'Supply & Service'}
                                     </td>
                                     <td className="px-1 py-1 border text-xs">{contract.first_party}</td>
