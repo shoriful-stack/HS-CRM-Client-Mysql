@@ -11,7 +11,7 @@ const useContract = (page, limit, filters) => {
             const params = {
                 page,
                 limit,
-                ...filters, // Include all filters like project_name, signingDateFrom, etc.
+                ...filters,
             };
 
             const res = await axiosSecure.get("/contracts", { params });

@@ -38,6 +38,7 @@ const Projects = () => {
   const [editProjectModalOpen, setEditProjectModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const [allProjects] = useAllProjects_Master();
   const [allCustomers] = useAllCustomer();
   const [allDepartments] = useAllDepartment();
@@ -158,6 +159,7 @@ const Projects = () => {
   };
 
   const handleExport = async () => {
+    setButtonLoading(true);
     try {
       // Fetch all projects from the new API endpoint
       const response = await axiosSecure.get("/projects/all", {
@@ -204,6 +206,8 @@ const Projects = () => {
       }
     } catch (error) {
       console.error("Failed to export projects:", error);
+    }finally{
+      setButtonLoading(false);
     }
   };
 
@@ -518,10 +522,13 @@ const Projects = () => {
           </button>
           <button
             onClick={handleExport}
-            className="bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-black flex items-center gap-1"
+            className={`bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-black flex items-center gap-1 ${
+                buttonLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={buttonLoading}
           >
             <TbDatabaseExport className="w-5 h-4" />
-            <span className="text-xs">Export</span>
+            <span className="text-xs">{buttonLoading ? "Exporting..." : "Export"}</span>
           </button>
         </div>
       </div>
