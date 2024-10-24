@@ -79,6 +79,7 @@ const Projects = () => {
       [filterKey]: value,
     }));
     setCurrentPage(1); // Reset to first page on filter change
+    refetch();
   };
 
   // Handler to clear a specific filter
@@ -88,6 +89,7 @@ const Projects = () => {
       [filterKey]: "",
     }));
     setCurrentPage(1);
+    refetch();
   };
 
   // Handler to clear all filters
@@ -171,14 +173,14 @@ const Projects = () => {
           "Project Name": project.project_name,
           "Customer Name": project.customer_name,
           "Project Category":
-            project.project_category === "1"
+            project.project_type === 1
               ? "Service"
-              : project.project_category === "2"
+              : project.project_type === 2
               ? "Product"
               : "Supply & Service",
-          Department: project.department,
-          HOD: project.hod,
-          "Project Manager": project.pm,
+          Department: project.department_name,
+          HOD: project.hod_name,
+          "Project Manager": project.pm_name,
           Year: project.year,
           Phase: project.phase,
           "Project Code": project.project_code,

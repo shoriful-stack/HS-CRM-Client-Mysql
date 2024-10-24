@@ -56,7 +56,7 @@ const Dashboard = () => {
                     <h2 className="text-lg font-semibold">Expired Contracts</h2>
                     <div className="flex items-center justify-between mt-2">
                         <FaMoneyCheckAlt className='text-[32px]' />
-                        <span className="text-xl font-semibold">{allContracts.filter(contract => (contract.contract_status) === "0").length}</span>
+                        <span className="text-xl font-semibold">{allContracts.filter(contract => (contract.contract_status) === 0).length}</span>
                     </div>
                 </div>
                 {/*Total Users Card */}
@@ -72,7 +72,7 @@ const Dashboard = () => {
                     <h2 className="text-lg font-semibold">Active Customers</h2>
                     <div className="flex items-center justify-between mt-2">
                         <FaUsers className='text-3xl' />
-                        <span className="text-xl font-semibold">{allCustomers.filter(customer => (customer.status) === "1").length}</span>
+                        <span className="text-xl font-semibold">{allCustomers.filter(customer => (customer.customer_status) === 1).length}</span>
                     </div>
                 </div>
                 {/* active employee Card */}
